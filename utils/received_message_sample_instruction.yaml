@@ -1,0 +1,27 @@
+{
+  senderId: null,
+  category: null,
+  collapseKey: null,
+  contentAvailable: false,
+  data:
+    {
+      payload:
+        {
+          "action": "open_chat_room",
+          "chat_room_id": "8853de5e-e71e-41fb-9409-66679648136b",
+          "media_content": null,
+          "message_id": "8c529476-8f82-4ce1-809b-25c9df548777",
+          "sender_id": "4ed87d97-7769-4bdb-8686-c89536cedb23",
+          "text_content": { "text": "테스트메세지" },
+        },
+      type: chat,
+    },
+  from: 393119579005,
+  messageId: 0:1744871425699340%2b40aebef9fd7ecd,
+  messageType: null,
+  mutableContent: false,
+  notification: null,
+  sentTime: 1744871425689,
+  threadId: null,
+  ttl: 2419200,
+}
