@@ -15,7 +15,6 @@ import (
 )
 
 // 관리자 전용 Pepper 값 (비밀번호 보안용)
-const prodaoPepper = "0af6d35fb917354a7ddf5c67bba67436383a6dc1bf8c50f3ecab5a0f1f1fc5f6"
 
 // 블랙리스트 및 실패 카운트를 위한 저장소
 var (
@@ -48,12 +47,46 @@ func ValidatePepper(c fiber.Ctx) error {
 	return checkPepper(c, clientKey)
 }
 
+func parsePepper(requestPepper string, prodaoPepper string) (bool, error) {
+	if requestPepper == "" {
+		return false, nil
+	}
+
+	// ParseObfValue로 method와 scrambled 부분 분리
+	scrambled, methodNum, err := ParseObfValue(requestPepper)
+	if err != nil {
+		log.Printf("❌ Failed to parse obfuscated pepper: %v", err)
+		return false, err
+	}
+
+	// DecodeWithMethod로 원래 Pepper 복원
+	decodedPepper, err := DecodeWithMethod(methodNum, scrambled)
+	if err != nil {
+		log.Printf("❌ Failed to decode pepper with method %d: %v", methodNum, err)
+		return false, err
+	}
+
+	// 디코딩된 Pepper로 검증
+	if decodedPepper == prodaoPepper {
+		return true, nil
+	}
+
+	return false, nil
+}
+
 // 🔑 Pepper 검증 로직 (힌트 없는 반환)
 func checkPepper(c fiber.Ctx, clientKey string) error {
 	requestPepper := c.Get("X-Prodao-Pepper")
 	loggerMiddeleware(c)
-	// ✅ 올바른 Pepper일 경우
+	prodaoPepper := config.AppConfig.Server.ProdaoPepper
+
 	if requestPepper == prodaoPepper {
+		delete(failedCounts, clientKey) // 성공 시 실패 카운트 초기화
+		return c.Next()
+	}
+
+	// ✅ 올바른 Pepper일 경우
+	if isValid, _ := parsePepper(requestPepper, prodaoPepper); isValid {
 		delete(failedCounts, clientKey) // 성공 시 실패 카운트 초기화
 		return c.Next()
 	}

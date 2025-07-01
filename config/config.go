@@ -42,8 +42,9 @@ type FirebaseConfig struct {
 }
 
 type ServerConfig struct {
-	Port string
-	Env  string
+	Port         string
+	Env          string
+	ProdaoPepper string
 }
 
 var AppConfig *Config
@@ -77,8 +78,9 @@ func LoadConfig() {
 			CredentialsPath: getEnv("FIREBASE_CREDENTIALS_PATH", "config/firebase-credential.json"),
 		},
 		Server: ServerConfig{
-			Port: getEnv("SERVER_PORT", "8080"),
-			Env:  getEnv("APP_ENV", "development"),
+			Port:         getEnv("SERVER_PORT", "8080"),
+			Env:          getEnv("APP_ENV", "development"),
+			ProdaoPepper: getEnv("PRODAO_PEPPER", "0af6d35fb917354a7ddf5c67bba67436383a6dc1bf8c50f3ecab5a0f1f1fc5f6"),
 		},
 	}
 

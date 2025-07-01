@@ -160,7 +160,6 @@ func decodeMethod9(mixed string) (string, error) {
 	}
 	return parts[0], nil
 }
- 
 
 // -------------------------------------
 
@@ -173,7 +172,7 @@ var decodeFns = []func(string) (string, error){
 	decodeMethod6,
 	decodeMethod7,
 	decodeMethod8,
-	decodeMethod9, 
+	decodeMethod9,
 }
 
 func DecodeWithMethod(methodNum int, mixed string) (string, error) {

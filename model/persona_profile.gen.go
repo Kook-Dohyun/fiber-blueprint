@@ -27,6 +27,9 @@ type PersonaProfile struct {
 	Tags             pq.StringArray `gorm:"type:text[];column:tags" json:"tags"`
 	CreatedAt        time.Time      `gorm:"column:created_at;not null;autoCreateTime" json:"created_at"`
 	UpdatedAt        time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
+
+	// 🔗 관계 설정: PersonaBackgroundMedia와 일대다 관계
+	BackgroundMedia []PersonaBackgroundMedia `gorm:"foreignKey:PersonaProfileID;references:ID" json:"background_media,omitempty"`
 }
 
 // TableName PersonaProfile's table name

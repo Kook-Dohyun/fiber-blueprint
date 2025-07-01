@@ -9,7 +9,6 @@ import (
 
 // 라우트 설정 함수
 func SetupRoutes(app *fiber.App) {
-	 
 
 	app.Use(func(c fiber.Ctx) error {
 		return authority.ValidatePepper(c)
@@ -25,7 +24,10 @@ func SetupRoutes(app *fiber.App) {
 	SetupPersonaRoutes(app)
 	SetupPersonaSubscribeRoutes(app)
 	SetupPersonaProfileRoutes(app)
+	SetupPersonaBackgroundMediaRoutes(app)
 	SetupHomeFeedRoutes(app)
 	SetupPostRoutes(app)
 	SetupConnectionRoutes(app)
+	SetupChatRoutes(app)
+	SetupNotificationRoutes(app)
 }

@@ -174,15 +174,17 @@ func SendDIDNotification(db *gorm.DB, did string, payload NotificationPayload) e
 func SendPersonaNotification(db *gorm.DB, personaID string, payload NotificationPayload) error {
 	var preference model.PersonaNotificationPreference
 
-	// 1. 먼저 PersonaNotificationPreference를 로드
-	if err := db.Where("persona_id = ?", personaID).First(&preference).Error; err != nil {
-		return err
+	// 1. 먼저 PersonaNotificationPreference를 로드 (Find 사용으로 로그 방지)
+	result := db.Where("persona_id = ?", personaID).Find(&preference)
+	if result.RowsAffected == 0 {
+		return nil // 레코드가 없으면 조용히 종료
 	}
 
-	// 2. 연관된 NotificationPreference 수동으로 로드
+	// 2. 연관된 NotificationPreference 수동으로 로드 (Find 사용으로 로그 방지)
 	var notificationPref model.NotificationPreference
-	if err := db.Where("id = ?", preference.PreferenceID).First(&notificationPref).Error; err != nil {
-		return err
+	result = db.Where("id = ?", preference.PreferenceID).Find(&notificationPref)
+	if result.RowsAffected == 0 {
+		return nil // 레코드가 없으면 조용히 종료
 	}
 
 	preference.Preference = &notificationPref
